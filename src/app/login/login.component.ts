@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { filter } from "rxjs/operators";
 
 @Component({
   selector: "login",
@@ -11,9 +12,17 @@ export class LoginComponent implements OnInit {
     email: "hello@gmail.com",
     password: `123456`,
   };
+
+  @ViewChild(NgForm, { static: true })
+  loginForm: NgForm;
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loginForm.valueChanges
+      .pipe(filter(() => this.loginForm.valid))
+      .subscribe((value) => console.log("Form Value changed: ", value));
+  }
 
   login(loginForm: NgForm, submit) {
     console.log(loginForm.value, loginForm.valid, submit);
